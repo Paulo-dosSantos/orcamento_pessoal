@@ -8,6 +8,14 @@ class Despesa{
 		this.descricao=descricao;
 		this.valor=valor;
 	}
+	validarDados(){
+		for(let i in this){
+			if(this[i]==undefined || this[i]==''|| this[i]==null){
+				return false;
+			}
+			return true;
+		}
+	}
 
 
 
@@ -61,5 +69,12 @@ function cadastrarDespesa(){
 
 	console.log(despesa);
 
-	bd.gravar(despesa);
+	if(despesa.validarDados()){
+		bd.gravar(despesa);
+		$('#sucessoGravacao').modal('show')
+	}
+	else{
+		$('#erroGravacao').modal('show') 
+	}
+	
 }
