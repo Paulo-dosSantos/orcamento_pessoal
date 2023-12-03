@@ -43,6 +43,29 @@ class Bd{
 		localStorage.setItem('id',id);
 
 }
+
+
+	recuperarTodosRegistros(){
+		let despesas= new Array();
+		let id= localStorage.getItem('id');
+
+		//recuperar todos os items cadastrados
+		for(let i=1;i<=id;i++){
+
+			let despesa= JSON.parse(localStorage.getItem(i));
+
+			//existe a possibilidade destes items terem sido excluídos
+			//Neste caso, deve haver um tratamento de exceção
+
+			if(despesa===null){
+				continue;
+			}
+			despesas.push(despesa);
+			console.log(i,despesa);
+
+		}
+		return despesas;
+	}
 }
 let bd = new Bd();
 
@@ -91,3 +114,62 @@ function cadastrarDespesa(){
 	}
 	
 }
+function carregaListaDespesas(){
+	let despesas= new Array();
+	despesas=	bd.recuperarTodosRegistros();
+
+	let listaDespesas= document.getElementById('listaDespesas');
+	
+
+	despesas.forEach( function(d){
+		//faz parte do tbody e permite a criação de row
+		let linha = listaDespesas.insertRow();
+
+		//inserirColunas
+		linha.insertCell(0).innerHTML=`${d.dia}/${d.mes}/${d.ano}`
+
+		switch(d.tipo){
+
+		case '1':
+			d.tipo="Alimentação"
+			break;
+
+		case '2':
+			d.tipo="Educação"
+			break;
+
+		case '3':
+			d.tipo="Lazer"
+			break;
+
+		case '4':
+			d.tipo="Saúde"
+			break;
+
+		case '5':
+			d.tipo="Transporte"
+			break;
+		}
+
+
+
+
+		linha.insertCell(1).innerHTML=d.tipo;
+
+		//ajustar tipos
+
+		
+
+
+
+
+
+		linha.insertCell(2).innerHTML=d.descricao;
+		linha.insertCell(3).innerHTML=d.valor;
+		
+	})
+
+
+
+}
+carregaListaDespesas();
