@@ -44,6 +44,8 @@ class Bd{
 
 }
 
+	
+
 
 	recuperarTodosRegistros(){
 		let despesas= new Array();
@@ -65,6 +67,39 @@ class Bd{
 
 		}
 		return despesas;
+	}
+
+	pesquisar(despesa){
+
+		let listaFiltrada=  Array();
+		listaFiltrada = this.recuperarTodosRegistros();
+
+		//ano
+		if(despesa.ano!=''){
+			listaFiltrada=	listaFiltrada.filter(x=>x.ano==despesa.ano);
+		}
+		//mes
+		if(despesa.mes!=''){
+			listaFiltrada=	listaFiltrada.filter(x=>x.mes==despesa.mes);
+		}
+		//dia
+		if(despesa.dia!=''){
+			listaFiltrada=	listaFiltrada.filter(x=>x.dia==despesa.dia);
+		}
+		//tipo
+		if(despesa.tipo!=''){
+			listaFiltrada=	listaFiltrada.filter(x=>x.tipo==despesa.tipo);
+		}
+		//descricao
+		if(despesa.descricao!=''){
+			listaFiltrada=	listaFiltrada.filter(x=>x.descricao==despesa.descricao);
+		}
+		//valor
+		if(despesa.valor!=''){
+			listaFiltrada=	listaFiltrada.filter(x=>x.valor==despesa.valor);
+		}
+		console.log(listaFiltrada);
+		return listaFiltrada;
 	}
 }
 let bd = new Bd();
@@ -94,6 +129,13 @@ function cadastrarDespesa(){
 
 	if(despesa.validarDados()){
 		bd.gravar(despesa);
+
+		 ano=document.getElementById('ano').value='';
+		 mes=document.getElementById('mes').value='';
+		 dia=document.getElementById('dia').value='';
+		 tipo=document.getElementById('tipo').value='';
+		 descricao=document.getElementById('descricao').value='';
+		 valor=document.getElementById('valor').value='';
 		$('#modalRegistraDespesa').modal('show');
 		document.getElementById('modal_titulo').innerHTML = "Registro inserido com sucesso"
 			document.getElementById('modal_titulo_div').className="modal-header text-success";
@@ -114,11 +156,16 @@ function cadastrarDespesa(){
 	}
 	
 }
-function carregaListaDespesas(){
-	let despesas= new Array();
-	despesas=	bd.recuperarTodosRegistros();
+function carregaListaDespesas(despesas=Array(),filtro=false){
+
+	if(despesas.length==0 && filtro==false){
+		despesas=	bd.recuperarTodosRegistros();	
+	}
+
+	
 
 	let listaDespesas= document.getElementById('listaDespesas');
+	listaDespesas.innerHTML='';
 	
 
 	despesas.forEach( function(d){
@@ -172,4 +219,23 @@ function carregaListaDespesas(){
 
 
 }
+function pesquisarDespesa(){
+
+	let ano =document.getElementById('ano').value;
+	let mes=document.getElementById('mes').value;
+	let dia=document.getElementById('dia').value;
+	let tipo=document.getElementById('tipo').value;
+	let descricao= document.getElementById('descricao').value;
+	let valor=document.getElementById('valor').value;
+
+	let despesa= new Despesa(ano,mes,dia,tipo,descricao,valor);
+
+	let despesas= bd.pesquisar(despesa);
+
+	
+	
+
+	carregaListaDespesas(despesas,true);
+}
 carregaListaDespesas();
+ pesquisarDespesa();
